@@ -5,19 +5,26 @@
     "full_name": "Full Name",
     "learnMore": "Learn More",
     "refresh": "Refresh",
-    "noResults": "Looks a bit empty here",
+    "title": "Title",
+    "description": "Description",
+    "noResults": "You have no tasks listed yet.",
     "wait": "Please wait...",
-    "Ok": "Proceed"
+    "Ok": "Proceed",
+    "cancel": "Cancel",
+    "delete": "Delete"
   },
-  "character": {
-    "name": "Name",
-    "status": "Status",
-    "gender": "Gender: {0}",
-    "species": "Species: {0}",
+  "tasks": {
+    "new": "New Task",
+    "allTasks": "All Tasks",
+    "remainingTasks": "Remaining Task{0}",
+    "titlePlaceholder": "What needs to be done?",
+    "descriptionPlaceholder": "Additional details (optional), notes or subtasks",
+    "save": "Save Task",
     "details": "Character Details",
     "location": "Location",
-    "origin": "Origin",
-    "search": "Search for a character",
-    "bio": "{0} has appeared in {1} episode{2} of the show"
+    "createdAt": "Created At",
+    "start": "Create your first task",
+    "deleteTaskTitle": "Delete Task",
+    "deleteTaskMessage": "Are you sure you want to delete this task?"
   }
 }

@@ -1,3 +1,3 @@
-export { default as HomeScreen } from './home';
-export { default as FavouritesScreen } from './favourites';
-export { default as CharacterDetailsScreen } from './details';
+export { default as HomeScreen } from "./home";
+export { default as CompletedTasksScreen } from "./completedTasks";
+export { default as CreateTaskScreen } from "./createTask";

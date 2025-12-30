@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import React, { ReactNode, useEffect, useRef, useState } from 'react';
+import React, { ReactNode, useEffect, useRef, useState } from "react";
 import {
   TextInput,
   View,
@@ -7,13 +7,13 @@ import {
   TouchableOpacity,
   ViewStyle,
   StyleProp,
-} from 'react-native';
-import styles from './Styles';
-import { Text } from '@components/text';
-import { CrossIcon } from '../../assets';
-import { colors } from '@theme';
-import { useIsFocused } from '@react-navigation/native';
-import { Row } from '@components/layout/layout';
+} from "react-native";
+import styles from "./Styles";
+import { Text } from "@components/text";
+import { CrossIcon } from "../../assets";
+import { colors } from "@theme";
+import { useIsFocused } from "@react-navigation/native";
+import { Row } from "@components/layout/layout";
 
 interface IProps extends TextInputProps {
   style?: Record<string, unknown> | Record<string, unknown>[];
@@ -53,7 +53,7 @@ export const Input = ({
   };
   const [focused, setFocused] = useState(false);
   const [touched, setTouched] = useState(false);
-  const [value, setValue] = useState('');
+  const [value, setValue] = useState("");
   const erronus = error && touched;
   const searchRef: any = useRef(null);
   const isFocused = useIsFocused();
@@ -68,7 +68,7 @@ export const Input = ({
       {label && (
         <Row mb={8}>
           <Text
-            color={light ? colors.white : colors.grey70}
+            color={light ? colors.white : colors.grey100}
             style={styles.leftAlign}
             bold
           >
@@ -94,15 +94,14 @@ export const Input = ({
           <TouchableOpacity style={styles.search}>{left}</TouchableOpacity>
         )}
         <TextInput
-          placeholderTextColor={colors.grey}
+          placeholderTextColor={colors.borderGreyDark}
           style={[
             styles.input,
             centerText && styles.centerText,
-            disabled && { color: colors.grey70 },
-            //ToDO: Fix-Me erronus  == struggled getting the bold on and off on errors
+            disabled && { color: colors.textGrey },
           ]}
           ref={searchRef}
-          placeholder={props.placeholder || ''}
+          placeholder={props.placeholder || ""}
           cursorColor={colors.primary}
           selectionColor={`${colors.primary}A1`}
           editable={!disabled}
@@ -126,8 +125,8 @@ export const Input = ({
         {search && (
           <TouchableOpacity
             onPress={() => {
-              setValue('');
-              textChanged('');
+              setValue("");
+              textChanged("");
               onClear?.();
             }}
             style={styles.search}
@@ -142,7 +141,7 @@ export const Input = ({
         <Text
           mt={8}
           size={13}
-          align='left'
+          align="left"
           style={styles.leftAlign}
           color={colors.danger}
         >

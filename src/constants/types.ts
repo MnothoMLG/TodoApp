@@ -1,6 +1,6 @@
 export interface ICallBacks {
-  onSuccess?: (msg: string) => void;
-  onFailure?: (reason: string) => void;
+  onSuccess?: (msg?: string) => void;
+  onFailure?: (reason?: string) => void;
 }
 
 export interface IGenericResponse {
@@ -8,14 +8,14 @@ export interface IGenericResponse {
 }
 
 export enum EToastTypes {
-  ERROR = 'error',
-  SUCCESS = 'success',
+  ERROR = "error",
+  SUCCESS = "success",
 }
 
 export enum EButtonVariants {
-  PRIMARY = 'primary',
-  SECONDARY = 'secondary',
-  TERTIARY = 'tertiary',
+  PRIMARY = "primary",
+  SECONDARY = "secondary",
+  TERTIARY = "tertiary",
 }
 
 export interface ToastConfig {
@@ -25,23 +25,12 @@ export interface ToastConfig {
   topOffset?: number;
 }
 
-export interface ICharacter {
-  id: number;
-  name: string;
-  status: string;
-  species: string;
-  type: string;
-  gender: string;
-  origin: {
-    name: string;
-    url: string;
-  };
-  location: {
-    name: string;
-    url: string;
-  };
-  image: string;
-  episode: string[];
-  url: string;
-  created: string;
+export interface ITask {
+  id: string;
+  title: string;
+  description?: string;
+  dueDate?: string;
+  list?: string;
+  completed?: boolean;
+  createdAt?: number;
 }

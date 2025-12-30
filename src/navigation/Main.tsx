@@ -1,21 +1,18 @@
-import React from 'react';
+import React from "react";
 import {
   createStackNavigator,
   StackHeaderProps,
-} from '@react-navigation/stack';
-import { CharacterDetailsScreen, FavouritesScreen, HomeScreen } from '@screens';
-import { MainStackParamList } from './types';
-import { noHeader } from '@config';
-import { routes } from './routes';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { CustomTabBar } from '@components/tabBar';
-import { BackButton, Row } from '@components/index';
-import { colors } from '@theme/index';
+} from "@react-navigation/stack";
+import { CreateTaskScreen, CompletedTasksScreen, HomeScreen } from "@screens";
+import { MainStackParamList } from "./types";
+import { noHeader } from "@config";
+import { routes } from "./routes";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { CustomTabBar } from "@components/tabBar";
 
 const MainStackNav = createStackNavigator<MainStackParamList>();
 
 const Tab = createBottomTabNavigator<MainStackParamList>();
-const tabs: string[] = [routes.HOME, routes.FAVORITES];
 
 export const MainStack = () => {
   return (
@@ -25,11 +22,11 @@ export const MainStack = () => {
         name={routes.HOME_TAB}
         component={HomeTabNav}
       />
-      <MainStackNav.Group screenOptions={{ presentation: 'modal' }}>
+      <MainStackNav.Group screenOptions={{ presentation: "modal" }}>
         <MainStackNav.Screen
           {...noHeader}
-          name={routes.CDP}
-          component={CharacterDetailsScreen}
+          name={routes.CREATE_TASK}
+          component={CreateTaskScreen}
         />
       </MainStackNav.Group>
     </MainStackNav.Navigator>
@@ -41,9 +38,9 @@ const HomeTabNav = () => {
     <Tab.Navigator tabBar={(props: any) => <CustomTabBar {...props} />}>
       <Tab.Screen {...noHeader} name={routes.HOME} component={HomeScreen} />
       <Tab.Screen
-        options={{ title: 'My Favourite Characters' }}
-        name={routes.FAVORITES}
-        component={FavouritesScreen}
+        {...noHeader}
+        name={routes.COMPLETE}
+        component={CompletedTasksScreen}
       />
     </Tab.Navigator>
   );

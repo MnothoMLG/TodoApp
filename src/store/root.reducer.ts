@@ -1,10 +1,10 @@
-import { combineReducers } from '@reduxjs/toolkit';
-import { loadingReducer } from './loading/reducer';
-import { characterReducer } from './characters/reducer';
+import { combineReducers } from "@reduxjs/toolkit";
+import { loadingReducer } from "./loading/reducer";
+import { tasksReducer } from "./tasks/reducer";
 
 export const reducers = combineReducers({
   loadingReducer,
-  characterReducer,
+  tasksReducer,
 });
 
 export type AppState = ReturnType<typeof reducers>;

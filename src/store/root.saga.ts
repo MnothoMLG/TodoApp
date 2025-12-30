@@ -1,5 +1,5 @@
-import { all } from 'redux-saga/effects';
-import { watchCharacterSagas } from './characters/sagas';
+import { all } from "redux-saga/effects";
+import { watchTasksSagas } from "./tasks/sagas";
 export default function* sagas() {
-  yield all([watchCharacterSagas()]);
+  yield all([watchTasksSagas()]);
 }

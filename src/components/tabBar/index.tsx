@@ -1,11 +1,22 @@
-import React, { FC, useEffect } from 'react';
-import { StyleSheet, TouchableWithoutFeedback, View } from 'react-native';
-import { Text } from '../text';
-import { RickIcon, MortyIcon } from '@assets';
-import { SvgProps } from 'react-native-svg';
-import { useIsFocused } from '@react-navigation/native';
-import { routes } from '@navigation/routes';
-import { colors } from '@theme';
+import React, { FC, useEffect } from "react";
+import {
+  StyleSheet,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  View,
+} from "react-native";
+import { Text } from "../text";
+import { RickIcon, MortyIcon } from "@assets";
+import { SvgProps } from "react-native-svg";
+import { useIsFocused } from "@react-navigation/native";
+import { routes } from "@navigation/routes";
+import { colors } from "@theme";
+import {
+  ListTodoIcon,
+  PlusIcon,
+  SquareCheckBigIcon,
+} from "lucide-react-native";
+import { AppButton } from "@components/appButton";
 
 const tabHeight = 104;
 
@@ -35,7 +46,7 @@ export const CustomTabBar = ({ state, descriptors, navigation }: any) => {
   }) => {
     const event = !args.animateOnly
       ? navigation.emit({
-          type: 'tabPress',
+          type: "tabPress",
           target: args.key,
           canPreventDefault: true,
         })
@@ -60,12 +71,12 @@ export const CustomTabBar = ({ state, descriptors, navigation }: any) => {
         const isFocused = state.index === index;
 
         const Icon = icons[route.name];
-        const color = isFocused ? colors.primary : colors.grey70;
+        const color = isFocused ? colors.primary : colors.textGrey;
 
         return (
           <TouchableWithoutFeedback
             key={route.name}
-            accessibilityRole='button'
+            accessibilityRole="button"
             accessibilityState={isFocused ? { selected: true } : {}}
             accessibilityLabel={options.tabBarAccessibilityLabel}
             testID={options.tabBarTestID}
@@ -86,7 +97,7 @@ export const CustomTabBar = ({ state, descriptors, navigation }: any) => {
                   </Text>
                 </View>
               ) : null}
-              <Icon width={34} height={34} color={color} />
+              <Icon width={24} height={24} color={color} />
               <Text bold={isFocused} mt={5} color={color} size={12} lh={13}>
                 {route.name}
               </Text>
@@ -99,18 +110,18 @@ export const CustomTabBar = ({ state, descriptors, navigation }: any) => {
 };
 
 const icons: { [key: string]: FC<SvgProps> } = {
-  [routes.HOME]: RickIcon,
-  [routes.FAVORITES]: MortyIcon,
+  [routes.HOME]: ListTodoIcon,
+  [routes.COMPLETE]: SquareCheckBigIcon,
 };
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: 'row',
-    backgroundColor: 'white',
-    alignItems: 'flex-start',
+    flexDirection: "row",
+    backgroundColor: "white",
+    alignItems: "flex-start",
     paddingTop: 16,
     height: tabHeight,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOpacity: 0.6,
     shadowOffset: {
       width: 1,
@@ -124,31 +135,31 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 20,
   },
   padding: {
-    backgroundColor: 'white',
+    backgroundColor: "white",
   },
   item: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   badge: {
     minWidth: 20,
     height: 20,
     borderRadius: 10,
     backgroundColor: colors.primary,
-    position: 'absolute',
+    position: "absolute",
     top: -4,
     right: 20,
     zIndex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     paddingHorizontal: 4,
   },
   activeItem: {
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     bottom: 0,
-    position: 'absolute',
+    position: "absolute",
     left: 0,
     right: 0,
   },
