@@ -11,7 +11,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { CheckButton } from "../checkButton";
 import { isComplete } from "@util";
 import { useDispatch, useSelector } from "react-redux";
-import { getAllFavourites } from "@store/tasks/selectors";
+import { getAllCompleteTasks } from "@store/tasks/selectors";
 import { Trash2Icon, ChevronDown, ChevronUp } from "lucide-react-native";
 import { filtersConfig } from "@config/index";
 import { deleteTaskRequest } from "@store/actions";
@@ -23,12 +23,11 @@ export interface Props {
 }
 
 export const TaskCard: FC<Props> = ({ toggleComplete, task, index }) => {
-  const favs = useSelector(getAllFavourites);
+  const favs = useSelector(getAllCompleteTasks);
   const { t } = useTranslation();
   const isTaskComplete = isComplete(task, favs);
   const [expanded, setExpanded] = useState(false);
   const listConfig = filtersConfig.find((f) => f.label === task.list);
-
   const dispatch = useDispatch();
 
   const onDelete = () => {

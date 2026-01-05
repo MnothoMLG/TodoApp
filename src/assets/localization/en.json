@@ -19,6 +19,7 @@
     "allTasks": "All Tasks",
     "dueDate": "Due date",
     "dueOn": "Tasks due on {0}",
+    "complete": "Complete Tasks",
     "list": "List/Tag",
     "remainingTasks": "Remaining Task{0}",
     "titlePlaceholder": "What needs to be done?",

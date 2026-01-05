@@ -1,5 +1,6 @@
 import React, { useMemo, useState } from "react";
 import { View, StyleSheet } from "react-native";
+import * as Yup from "yup";
 import { Formik } from "formik";
 import {
   Text,
@@ -14,7 +15,6 @@ import { colors } from "@theme/index";
 import { useTranslation } from "@hooks/useTranslationHook";
 import { useLoading } from "@hooks/useLoadingHook";
 import { ADD_TASK_LOADING_KEY, addTaskRequest } from "@store/actions";
-import * as Yup from "yup";
 import { useDispatch } from "react-redux";
 import { EButtonVariants, ITask } from "@constants/types";
 import { useNavigation } from "@react-navigation/native";

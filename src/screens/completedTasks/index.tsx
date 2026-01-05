@@ -1,38 +1,29 @@
 import React from "react";
 import { FlatList, SafeAreaView, StyleSheet } from "react-native";
 import { colors } from "@theme";
-import {
-  Margin,
-  TaskCard,
-  Text,
-  Center,
-  ListEmptyComponent,
-} from "@components";
-import { useTranslation } from "@hooks";
-import { useNavigation } from "@react-navigation/native";
-import { routes } from "@navigation/routes";
-import { GenericMainStackScreenProps } from "@navigation/types";
+import { Margin, TaskCard, Text, ListEmptyComponent } from "@components";
 import { useDispatch, useSelector } from "react-redux";
 import { toggleTaskCompletion } from "@store/actions";
-import { getAllFavourites } from "@store/tasks/selectors";
-import { EmptyListIcon } from "@assets/icons";
+import { getAllCompleteTasks } from "@store/tasks/selectors";
+import { useTranslation } from "@hooks";
 
 const CompletedTasks = () => {
-  const { t } = useTranslation();
   const dispatch = useDispatch();
-  const navigation =
-    useNavigation<GenericMainStackScreenProps<routes.COMPLETE>>();
-
-  const favs = useSelector(getAllFavourites);
+  const { t } = useTranslation();
+  const completeTasks = useSelector(getAllCompleteTasks);
 
   return (
     <SafeAreaView style={styles.container}>
       <FlatList
-        data={favs}
+        data={completeTasks}
         style={styles.list}
         testID="Done-FlatList"
-        extraData={favs}
         contentContainerStyle={styles.items}
+        ListHeaderComponent={() => (
+          <Text mb={16} size={24} bold>
+            {t("tasks.complete")}
+          </Text>
+        )}
         renderItem={({ item, index }) => (
           <TaskCard
             index={index}

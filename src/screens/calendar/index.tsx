@@ -124,35 +124,6 @@ const CalendarScreen = () => {
               toggleComplete={() => {
                 dispatch(toggleTaskCompletion({ task: item }));
               }}
-              onEdit={() => {
-                navigation.navigate(routes.CREATE_TASK, {
-                  task: item,
-                });
-              }}
-              onDelete={() => {
-                Alert.alert(
-                  t("tasks.deleteTaskTitle"),
-                  t("tasks.deleteTaskMessage"),
-                  [
-                    {
-                      text: t("common.cancel"),
-                      style: "cancel",
-                    },
-                    {
-                      text: t("common.delete"),
-                      style: "destructive",
-                      onPress: () => {
-                        dispatch(
-                          deleteTaskRequest({
-                            taskId: item.id,
-                            taskTitle: item.title,
-                          })
-                        );
-                      },
-                    },
-                  ]
-                );
-              }}
             />
           )
         }

@@ -53,7 +53,6 @@ const Home = () => {
     return filteredTasks;
   }, [activeFilter, searchKeyword, tasksList]);
 
-  console.log({ tasksToDisplay });
   const sections = buildSections(tasksToDisplay);
 
   useEffect(() => {
