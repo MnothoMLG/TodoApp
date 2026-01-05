@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from "react";
-import { View, StyleSheet, SafeAreaView, Platform } from "react-native";
+import { View, StyleSheet } from "react-native";
 import { Formik } from "formik";
 import {
   Text,
@@ -18,7 +18,7 @@ import * as Yup from "yup";
 import { useDispatch } from "react-redux";
 import { EButtonVariants, ITask } from "@constants/types";
 import { useNavigation } from "@react-navigation/native";
-import { CalendarIcon, ChevronDown, LayoutList } from "lucide-react-native";
+import { CalendarIcon, ChevronDown } from "lucide-react-native";
 import { PickerModal } from "./PickerModal";
 import { formatDate, generateTaskId } from "@util";
 import { filtersConfig } from "@config/index";
@@ -43,7 +43,6 @@ const validationSchema = Yup.object().shape({
 export default function NewTaskScreen() {
   const loading = useLoading(ADD_TASK_LOADING_KEY);
   const [showPicker, setPickerModal] = useState(false);
-  const [pickerMode, setPickerMode] = useState<"date" | "list">("date");
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const navigation = useNavigation();
@@ -78,7 +77,7 @@ export default function NewTaskScreen() {
   };
 
   return (
-    <SafeAreaView style={styles.safe}>
+    <View style={styles.container}>
       <Row
         fullWidth
         align="center"
@@ -106,9 +105,9 @@ export default function NewTaskScreen() {
         }}
       >
         {({ values, errors, handleChange, setFieldValue, resetForm }) => {
-          const canSave = values.title.trim().length > 0 && !loading;
+          const canSave =
+            values.title.trim().length > 0 && !loading && !errors.title;
 
-          console.log({ errors });
           return (
             <View style={styles.screen}>
               <Input
@@ -142,14 +141,14 @@ export default function NewTaskScreen() {
                       {t("tasks.dueDate")}
                     </Text>
                     <AppButton
-                      label={values?.dueDate || "dd/mm/yyyy"}
+                      label={values?.dueDate || t("common.dateFormat")}
                       onPress={() => {
-                        setPickerMode("date");
                         setPickerModal(true);
                       }}
                       variant={EButtonVariants.SECONDARY}
                       br={8}
                       style={{ height: 42 }}
+                      textSize={13}
                       iconLeft={() => (
                         <CalendarIcon size={16} color={colors.textGrey} />
                       )}
@@ -208,36 +207,26 @@ export default function NewTaskScreen() {
                 canProceed={!!values.dueDate}
                 showPicker={showPicker}
                 closeModal={closeModal}
-                renderContent={() =>
-                  pickerMode === "date" ? (
-                    <Calendar
-                      close={closeModal}
-                      currentDate={values.dueDate}
-                      onSelection={(date) => {
-                        setFieldValue("dueDate", formatDate(date?.dateString));
-                      }}
-                    />
-                  ) : (
-                    <Calendar
-                      close={closeModal}
-                      currentDate={values.dueDate}
-                      onSelection={(date) => {
-                        setFieldValue("dueDate", date?.dateString);
-                      }}
-                    />
-                  )
-                }
+                renderContent={() => (
+                  <Calendar
+                    close={closeModal}
+                    currentDate={values.dueDate}
+                    onSelection={(date) => {
+                      setFieldValue("dueDate", formatDate(date?.dateString));
+                    }}
+                  />
+                )}
               />
             </View>
           );
         }}
       </Formik>
-    </SafeAreaView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: colors.white },
+  container: { flex: 1, backgroundColor: colors.white },
   modalWrapper: {
     width: "100%",
     backgroundColor: colors.white,
@@ -250,13 +239,14 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.white,
     paddingHorizontal: 24,
-    paddingTop: Platform.select({ ios: 8, android: 14 }),
+    paddingTop: 16,
   },
   closeModal: { width: 30, height: 30 },
   headerRow: {
     alignItems: "center",
     justifyContent: "space-between",
     paddingHorizontal: 24,
+    borderWidth: 1,
   },
   closeBtn: {
     width: 36,

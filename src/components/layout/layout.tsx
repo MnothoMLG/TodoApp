@@ -1,6 +1,7 @@
 import {
   FlexAlignType,
   SafeAreaView,
+  StyleProp,
   View,
   ViewProps,
   ViewStyle,
@@ -30,8 +31,8 @@ export function Margin({
   children,
   style,
 }: {
-  [key: string]: number | Element | ViewStyle | ReactNode; //could just extend ViewProps
-  style?: ViewStyle;
+  [key: string]: number | Element | StyleProp<ViewStyle> | ReactNode; //could just extend ViewProps
+  style?: StyleProp<ViewStyle>;
   children?: ReactNode;
 }) {
   return (

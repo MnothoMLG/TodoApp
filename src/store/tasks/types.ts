@@ -8,3 +8,8 @@ export interface TasksState {
 export interface ITaskPayload extends ICallBacks {
   task: ITask;
 }
+
+export interface IDeleteTaskPayload extends ICallBacks {
+  taskId: string;
+  taskTitle?: string;
+}

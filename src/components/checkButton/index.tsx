@@ -1,7 +1,4 @@
-import { useEffect, useRef } from "react";
 import { StyleSheet, TouchableOpacity, ViewStyle } from "react-native";
-import LottieView from "lottie-react-native";
-import { CheckLottie } from "@assets";
 import { colors } from "@theme";
 import { CheckIcon } from "lucide-react-native";
 
@@ -12,32 +9,9 @@ interface Props {
 }
 
 export function CheckButton({ active, onPress, style }: Props) {
-  const animation = useRef<LottieView>(null);
-
-  // useEffect(() => {
-  //   if (active) {
-  //     animation.current?.play(0, 45);
-  //   } else {
-  //     animation.current?.play(45, 0);
-  //   }
-  // }, [active]);
-
-  const like = () => {
-    animation.current?.play(0, 45);
-  };
-
-  const unlike = () => {
-    animation.current?.play(45, 0);
-  };
-
   return (
     <TouchableOpacity
       onPress={() => {
-        if (active) {
-          unlike();
-        } else {
-          like();
-        }
         onPress?.();
       }}
       style={[styles.container, !active && styles.inactive, style]}
@@ -60,9 +34,5 @@ const styles = StyleSheet.create({
   },
   inactive: {
     backgroundColor: colors.lightGrey,
-  },
-  animation: {
-    width: 40,
-    height: 40,
   },
 });

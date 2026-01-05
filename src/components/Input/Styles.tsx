@@ -27,7 +27,7 @@ export default StyleSheet.create({
     height: 56,
     flex: 1,
     textAlignVertical: "center",
-    fontSize: 16,
+    fontSize: 14,
     color: colors.grey100,
   },
   centerText: {

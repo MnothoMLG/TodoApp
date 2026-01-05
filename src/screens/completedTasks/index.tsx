@@ -40,11 +40,6 @@ const CompletedTasks = () => {
             toggleComplete={() => {
               dispatch(toggleTaskCompletion({ task: item }));
             }}
-            onPress={() => {
-              navigation.navigate(routes.DETAILS, {
-                task: item,
-              });
-            }}
           />
         )}
         ItemSeparatorComponent={() => <Margin mt={16} />}

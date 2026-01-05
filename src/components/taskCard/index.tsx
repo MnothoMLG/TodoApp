@@ -1,6 +1,6 @@
 import React, { FC, useState } from "react";
 import { Text } from "../text";
-import { StyleSheet, TouchableOpacity, View } from "react-native";
+import { Alert, StyleSheet, TouchableOpacity, View } from "react-native";
 import { colors } from "@theme";
 import { ITask } from "@constants/types";
 import { Margin, Row } from "../layout/layout";
@@ -10,34 +10,47 @@ import ShimmerPlaceholder from "react-native-shimmer-placeholder";
 import { LinearGradient } from "expo-linear-gradient";
 import { CheckButton } from "../checkButton";
 import { isComplete } from "@util";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { getAllFavourites } from "@store/tasks/selectors";
-import {
-  PenIcon as EditIcon,
-  Trash2Icon,
-  ChevronDown,
-  ChevronUp,
-} from "lucide-react-native";
+import { Trash2Icon, ChevronDown, ChevronUp } from "lucide-react-native";
+import { filtersConfig } from "@config/index";
+import { deleteTaskRequest } from "@store/actions";
 
 export interface Props {
   task: ITask;
   index: number;
-  onEdit: () => void;
-  onDelete: () => void;
   toggleComplete: () => void;
 }
 
-export const TaskCard: FC<Props> = ({
-  onEdit,
-  toggleComplete,
-  onDelete,
-  task,
-  index,
-}) => {
+export const TaskCard: FC<Props> = ({ toggleComplete, task, index }) => {
   const favs = useSelector(getAllFavourites);
   const { t } = useTranslation();
   const isTaskComplete = isComplete(task, favs);
   const [expanded, setExpanded] = useState(false);
+  const listConfig = filtersConfig.find((f) => f.label === task.list);
+
+  const dispatch = useDispatch();
+
+  const onDelete = () => {
+    Alert.alert(t("tasks.deleteTaskTitle"), t("tasks.deleteTaskMessage"), [
+      {
+        text: t("common.cancel"),
+        style: "cancel",
+      },
+      {
+        text: t("common.delete"),
+        style: "destructive",
+        onPress: () => {
+          dispatch(
+            deleteTaskRequest({
+              taskId: task.id,
+              taskTitle: task.title,
+            })
+          );
+        },
+      },
+    ]);
+  };
 
   return (
     <AnimatedButton
@@ -45,7 +58,6 @@ export const TaskCard: FC<Props> = ({
       delay={index * 70}
       onPress={() => {
         setExpanded(!expanded);
-        // onPress();
       }}
       style={styles.container}
       activeOpacity={0.8}
@@ -53,14 +65,30 @@ export const TaskCard: FC<Props> = ({
       useNativeDriver
       key={task.id + index}
     >
-      <Row align="center" justify="space-between">
+      <Row justify="space-between">
         <CheckButton
           active={isTaskComplete}
           onPress={toggleComplete}
           style={styles.checkBox}
         />
-        <Margin style={styles.details}>
-          <Text size={16}>{task?.title}</Text>
+        <Margin style={[styles.details, expanded && styles.row]}>
+          <Text mr={8} size={16}>
+            {task?.title}
+          </Text>
+          <View
+            style={{
+              borderWidth: 1,
+              backgroundColor: `${listConfig?.color}20`,
+              borderColor: listConfig?.color,
+              borderRadius: 4,
+              padding: 4,
+              paddingVertical: 2,
+            }}
+          >
+            <Text color={listConfig?.color} size={8}>
+              {listConfig?.label}
+            </Text>
+          </View>
         </Margin>
 
         {expanded ? (
@@ -79,9 +107,6 @@ export const TaskCard: FC<Props> = ({
           )}
 
           <Row fullWidth align="center" justify="flex-end">
-            <TouchableOpacity onPress={onEdit} style={styles.actionIcon}>
-              <EditIcon color={colors.primary} size={14} />
-            </TouchableOpacity>
             <TouchableOpacity onPress={onDelete} style={styles.actionIcon}>
               <Trash2Icon color={colors.danger} size={16} />
             </TouchableOpacity>
@@ -105,11 +130,6 @@ export const TaskCardPlaceholder: FC = () => {
             style={styles.detailShimmer}
             LinearGradient={LinearGradient}
           />
-          <Margin mt={8} />
-          <ShimmerPlaceholder
-            style={styles.detailShimmer}
-            LinearGradient={LinearGradient}
-          />
         </Margin>
         <Margin mr={8} />
       </Row>
@@ -124,6 +144,7 @@ const styles = StyleSheet.create({
     padding: 12,
     justifyContent: "space-between",
   },
+  row: { flexDirection: "row", alignItems: "center" },
   detailShimmer: { maxWidth: "95%" },
   imgLoader: { height: 102 },
   details: {

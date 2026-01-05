@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { Alert, SectionList, SafeAreaView, StyleSheet } from "react-native";
+import { Alert, SectionList, StyleSheet } from "react-native";
 import {
   Margin,
   Text,
@@ -7,7 +7,6 @@ import {
   TaskCardPlaceholder,
   CreateTaskButton,
   ListEmptyComponent,
-  Padding,
   Input,
 } from "@components";
 import { useLoading, useTranslation } from "@hooks";
@@ -18,21 +17,20 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   fetchTasksRequest,
   GET_TASKS_LOADING_KEY,
+  deleteTaskRequest,
   toggleTaskCompletion,
 } from "@store/actions";
 import { getAllCharacters } from "@store/tasks/selectors";
 import { colors } from "@theme";
 import { FiltersAndFolders } from "./FiltersAndFolders";
 import { SearchIcon } from "lucide-react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { EListingCategory } from "@constants/types";
 import { buildSections } from "@util";
 
 const Home = () => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
-  const { top } = useSafeAreaInsets();
-
   const [activeFilter, setActiveFilter] = useState<EListingCategory>();
   const [searchKeyword, setSearchKeyword] = useState("");
   const navigation = useNavigation<GenericMainStackScreenProps<routes.HOME>>();
@@ -55,17 +53,12 @@ const Home = () => {
     return filteredTasks;
   }, [activeFilter, searchKeyword, tasksList]);
 
+  console.log({ tasksToDisplay });
   const sections = buildSections(tasksToDisplay);
-
-  console.log("to diplay ", { tasksToDisplay });
 
   useEffect(() => {
     dispatch(fetchTasksRequest());
   }, []);
-
-  useEffect(() => {
-    console.log("+++ ==== Task List Updated === +++", tasksList);
-  }, [tasksList]);
 
   const onFilterSelection = (filter: EListingCategory) => {
     setActiveFilter(filter == activeFilter ? undefined : filter);
@@ -120,30 +113,6 @@ const Home = () => {
               toggleComplete={() => {
                 dispatch(toggleTaskCompletion({ task: item }));
               }}
-              onEdit={() => {
-                navigation.navigate(routes.CREATE_TASK, {
-                  task: item,
-                });
-              }}
-              onDelete={() => {
-                Alert.alert(
-                  t("tasks.deleteTaskTitle"),
-                  t("tasks.deleteTaskMessage"),
-                  [
-                    {
-                      text: t("common.cancel"),
-                      style: "cancel",
-                    },
-                    {
-                      text: t("common.delete"),
-                      style: "destructive",
-                      onPress: () => {
-                        /* Dispatch delete action here */
-                      },
-                    },
-                  ]
-                );
-              }}
             />
           )
         }
@@ -175,7 +144,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.white,
-    padding: 24,
   },
   items: {
     paddingBottom: 106,

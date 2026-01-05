@@ -3,6 +3,7 @@ import {
   addTaskSuccess,
   fetchTasksError,
   fetchTasksSuccess,
+  deleteTaskSuccess,
   toggleTaskCompletion,
 } from "./actions";
 import { TasksState } from "./types";
@@ -35,6 +36,14 @@ export const tasksReducer = createReducer(INITIAL_STATE, (builder) => {
         tasksList: [action.payload, ...state.tasksList],
       };
     })
+    .addCase(deleteTaskSuccess, (state: TasksState, action) => {
+      const { taskId } = action.payload;
+      return {
+        ...state,
+        tasksList: state.tasksList.filter((task) => task.id !== taskId),
+        completedTasks: state.completedTasks.filter((task) => task.id !== taskId),
+      };
+    })
     .addCase(toggleTaskCompletion, (state: TasksState, action) => {
       const { task } = action.payload;
       const isAlreadyCompleted = state.completedTasks.some(
@@ -53,7 +62,10 @@ export const tasksReducer = createReducer(INITIAL_STATE, (builder) => {
         });
       } else {
         // Add to completed tasks
-        updatedCompletedTasks = [...state.completedTasks, task];
+        updatedCompletedTasks = [
+          ...state.completedTasks,
+          { ...task, completed: true },
+        ];
         showToast({
           type: EToastTypes.SUCCESS,
           message: `Marked "${task.title}" as complete!`,

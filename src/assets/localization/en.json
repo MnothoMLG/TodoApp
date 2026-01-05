@@ -11,12 +11,14 @@
     "wait": "Please wait...",
     "Ok": "Proceed",
     "cancel": "Cancel",
-    "delete": "Delete"
+    "delete": "Delete",
+    "dateFormat": "DD-MM-YYYY"
   },
   "tasks": {
     "new": "New Task",
     "allTasks": "All Tasks",
     "dueDate": "Due date",
+    "dueOn": "Tasks due on {0}",
     "list": "List/Tag",
     "remainingTasks": "Remaining Task{0}",
     "titlePlaceholder": "What needs to be done?",
