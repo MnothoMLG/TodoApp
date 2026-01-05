@@ -1,22 +1,15 @@
 import React, { FC, useEffect } from "react";
-import {
-  StyleSheet,
-  TouchableOpacity,
-  TouchableWithoutFeedback,
-  View,
-} from "react-native";
+import { StyleSheet, TouchableWithoutFeedback, View } from "react-native";
 import { Text } from "../text";
-import { RickIcon, MortyIcon } from "@assets";
 import { SvgProps } from "react-native-svg";
 import { useIsFocused } from "@react-navigation/native";
 import { routes } from "@navigation/routes";
 import { colors } from "@theme";
 import {
+  Calendar,
   ListTodoIcon,
-  PlusIcon,
   SquareCheckBigIcon,
 } from "lucide-react-native";
-import { AppButton } from "@components/appButton";
 
 const tabHeight = 104;
 
@@ -111,6 +104,7 @@ export const CustomTabBar = ({ state, descriptors, navigation }: any) => {
 
 const icons: { [key: string]: FC<SvgProps> } = {
   [routes.HOME]: ListTodoIcon,
+  [routes.CALENDAR]: Calendar,
   [routes.COMPLETE]: SquareCheckBigIcon,
 };
 

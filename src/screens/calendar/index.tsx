@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { Alert, SectionList, SafeAreaView, StyleSheet } from "react-native";
+import { Alert, SafeAreaView, StyleSheet, FlatList } from "react-native";
 import {
   Margin,
   Text,
@@ -7,7 +7,6 @@ import {
   TaskCardPlaceholder,
   CreateTaskButton,
   ListEmptyComponent,
-  Padding,
   Input,
 } from "@components";
 import { useLoading, useTranslation } from "@hooks";
@@ -15,6 +14,7 @@ import { useNavigation } from "@react-navigation/native";
 import { routes } from "@navigation/routes";
 import { GenericMainStackScreenProps } from "@navigation/types";
 import { useDispatch, useSelector } from "react-redux";
+import CalendarStrip from "react-native-calendar-strip";
 import {
   fetchTasksRequest,
   GET_TASKS_LOADING_KEY,
@@ -22,40 +22,35 @@ import {
 } from "@store/actions";
 import { getAllCharacters } from "@store/tasks/selectors";
 import { colors } from "@theme";
-import { FiltersAndFolders } from "./FiltersAndFolders";
 import { SearchIcon } from "lucide-react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { EListingCategory } from "@constants/types";
-import { buildSections } from "@util";
 
-const Home = () => {
+const CalendarScreen = () => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
-  const { top } = useSafeAreaInsets();
-
-  const [activeFilter, setActiveFilter] = useState<EListingCategory>();
+  const [activeDateFilter, setActiveFilter] = useState<string>();
   const [searchKeyword, setSearchKeyword] = useState("");
   const navigation = useNavigation<GenericMainStackScreenProps<routes.HOME>>();
   const loading = useLoading(GET_TASKS_LOADING_KEY);
   const tasksList = useSelector(getAllCharacters);
-  const taskListLength = tasksList.length;
 
   const tasksToDisplay = useMemo(() => {
     let filteredTasks = tasksList.filter((task) => {
-      const matchesList = !activeFilter || task.list === activeFilter;
+      const matchesDate =
+        !activeDateFilter || task.dueDate === activeDateFilter;
 
       const matchesSearch =
         !searchKeyword ||
         task.title.toLowerCase().includes(searchKeyword.toLowerCase()) ||
         task.description?.toLowerCase().includes(searchKeyword.toLowerCase());
 
-      return matchesList && matchesSearch;
+      return matchesDate && matchesSearch;
     });
 
     return filteredTasks;
-  }, [activeFilter, searchKeyword, tasksList]);
+  }, [activeDateFilter, searchKeyword, tasksList]);
 
-  const sections = buildSections(tasksToDisplay);
+  const taskListLength = tasksToDisplay.length;
 
   console.log("to diplay ", { tasksToDisplay });
 
@@ -67,17 +62,12 @@ const Home = () => {
     console.log("+++ ==== Task List Updated === +++", tasksList);
   }, [tasksList]);
 
-  const onFilterSelection = (filter: EListingCategory) => {
-    setActiveFilter(filter == activeFilter ? undefined : filter);
-  };
-
   return (
     <SafeAreaView style={styles.container}>
-      <SectionList
-        sections={sections}
+      <FlatList
+        data={tasksToDisplay}
         style={styles.list}
         contentContainerStyle={styles.items}
-        stickySectionHeadersEnabled={false}
         ListHeaderComponent={
           <Margin mb={16}>
             <Text size={24} bold>
@@ -91,9 +81,30 @@ const Home = () => {
               )}
             </Text>
 
-            <FiltersAndFolders
-              onFilterSelection={onFilterSelection}
-              activeFilter={activeFilter}
+            <CalendarStrip
+              scrollable
+              style={{ height: 80, paddingTop: 20, paddingBottom: 10 }}
+              calendarColor={colors.transparent}
+              calendarHeaderStyle={{
+                color: colors.textGrey,
+                fontSize: 14,
+                marginBottom: 8,
+              }}
+              onDateSelected={(date: moment.Moment) => {
+                console.log("++++++ >>", { date });
+                const formattedDate = date.format("DD-MM-YYYY");
+                console.log("++++++ >>", { formattedDate });
+                setActiveFilter(formattedDate as EListingCategory);
+
+                // tasksToDisplay
+              }}
+              dateNumberStyle={{ color: colors.grey100 }}
+              dateNameStyle={{ color: colors.grey100 }}
+              highlightDateNumberStyle={styles.dateStyles}
+              highlightDateNameStyle={styles.dateStyles}
+              disabledDateNameStyle={{ color: "grey" }}
+              disabledDateNumberStyle={{ color: "grey" }}
+              iconContainer={{ flex: 0.1 }}
             />
 
             <Input
@@ -105,11 +116,6 @@ const Home = () => {
             />
           </Margin>
         }
-        renderSectionHeader={({ section }) => (
-          <Text mt={8} mb={8} size={16} bold color={`${colors.dark}70`}>
-            {section.title}
-          </Text>
-        )}
         renderItem={({ item, index }) =>
           loading ? (
             <TaskCardPlaceholder />
@@ -153,6 +159,7 @@ const Home = () => {
               onCreateNewTask={() => {
                 navigation.navigate(routes.CREATE_TASK);
               }}
+              search={!!searchKeyword || !!activeDateFilter}
               refreshing={loading}
             />
           ) : null
@@ -169,7 +176,7 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default CalendarScreen;
 
 const styles = StyleSheet.create({
   container: {
@@ -177,6 +184,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white,
     padding: 24,
   },
+  dateStyles: { color: colors.primary },
   items: {
     paddingBottom: 106,
     padding: 8,

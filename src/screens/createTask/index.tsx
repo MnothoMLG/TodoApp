@@ -1,17 +1,27 @@
 import React, { useMemo, useState } from "react";
 import { View, StyleSheet, SafeAreaView, Platform } from "react-native";
 import { Formik } from "formik";
-import { Text, Input, BackButton, AppButton, Row, Margin } from "@components";
+import {
+  Text,
+  Input,
+  BackButton,
+  AppButton,
+  Calendar,
+  Row,
+  Margin,
+} from "@components";
 import { colors } from "@theme/index";
 import { useTranslation } from "@hooks/useTranslationHook";
 import { useLoading } from "@hooks/useLoadingHook";
 import { ADD_TASK_LOADING_KEY, addTaskRequest } from "@store/actions";
 import * as Yup from "yup";
 import { useDispatch } from "react-redux";
-import { ITask } from "@constants/types";
-import { useNavigation, useRoute } from "@react-navigation/native";
-import { GenericMainStackRouteProps } from "@navigation/types";
-import { routes } from "@navigation/routes";
+import { EButtonVariants, ITask } from "@constants/types";
+import { useNavigation } from "@react-navigation/native";
+import { CalendarIcon, ChevronDown, LayoutList } from "lucide-react-native";
+import { PickerModal } from "./PickerModal";
+import { formatDate, generateTaskId } from "@util";
+import { filtersConfig } from "@config/index";
 
 type ListOption = "Inbox" | "Work" | "Personal";
 
@@ -23,20 +33,18 @@ type FormValues = {
 };
 
 const validationSchema = Yup.object().shape({
-  title: Yup.string().trim().min(1, "Required").required("Required"),
+  title: Yup.string()
+    .min(1, "A title is required")
+    .required("A title is required"),
   description: Yup.string().optional(),
   dueDate: Yup.string().optional(),
-  list: Yup.mixed<ListOption>().oneOf(["Inbox", "Work", "Personal"]).required(),
 });
 
 export default function NewTaskScreen() {
-  const { params } = useRoute<GenericMainStackRouteProps<routes.CREATE_TASK>>();
   const loading = useLoading(ADD_TASK_LOADING_KEY);
-
-  console.log("+++ NewTaskScreen Rendered +++", { loading, params });
-
+  const [showPicker, setPickerModal] = useState(false);
+  const [pickerMode, setPickerMode] = useState<"date" | "list">("date");
   const { t } = useTranslation();
-
   const dispatch = useDispatch();
   const navigation = useNavigation();
 
@@ -46,10 +54,11 @@ export default function NewTaskScreen() {
       description: "",
       dueDate: "",
       list: "Inbox",
-      ...params?.task,
     }),
     []
   );
+
+  const closeModal = () => setPickerModal(false);
 
   const addTask = (values: FormValues, onSuccessfulAddition?: () => void) => {
     const onSuccess = () => {
@@ -62,9 +71,8 @@ export default function NewTaskScreen() {
       description: values.description.trim(),
       dueDate: values.dueDate,
       list: values.list,
+      id: generateTaskId(),
     };
-
-    console.log("+++ Adding Task with payload: ", payload);
 
     dispatch(addTaskRequest({ task: payload as ITask, onSuccess }));
   };
@@ -90,23 +98,17 @@ export default function NewTaskScreen() {
         initialValues={initialValues}
         validationSchema={validationSchema}
         validateOnBlur
-        validateOnChange={false}
+        validateOnChange
         onSubmit={(values, helpers) => {
           addTask(values, () => {
             helpers.resetForm();
           });
         }}
       >
-        {({
-          values,
-          errors,
-          touched,
-          handleChange,
-          handleSubmit,
-          resetForm,
-        }) => {
+        {({ values, errors, handleChange, setFieldValue, resetForm }) => {
           const canSave = values.title.trim().length > 0 && !loading;
 
+          console.log({ errors });
           return (
             <View style={styles.screen}>
               <Input
@@ -115,8 +117,7 @@ export default function NewTaskScreen() {
                 onChangeText={handleChange("title")}
                 placeholder={t("tasks.titlePlaceholder")}
                 style={styles.input}
-                error={touched.title && errors.title ? errors.title : undefined}
-                autoFocus
+                error={errors.title}
                 returnKeyType="done"
               />
 
@@ -130,7 +131,66 @@ export default function NewTaskScreen() {
                 textAlignVertical="top"
               />
 
-              <Margin mt={24} />
+              <Margin mt={24} mb={24}>
+                <Row
+                  justify="space-between"
+                  align="center"
+                  style={{ marginBottom: 8 }}
+                >
+                  <View style={styles.flex}>
+                    <Text size={14} mb={8} color={colors.grey100}>
+                      {t("tasks.dueDate")}
+                    </Text>
+                    <AppButton
+                      label={values?.dueDate || "dd/mm/yyyy"}
+                      onPress={() => {
+                        setPickerMode("date");
+                        setPickerModal(true);
+                      }}
+                      variant={EButtonVariants.SECONDARY}
+                      br={8}
+                      style={{ height: 42 }}
+                      iconLeft={() => (
+                        <CalendarIcon size={16} color={colors.textGrey} />
+                      )}
+                      iconRight={() => (
+                        <ChevronDown color={colors.primary} size={14} />
+                      )}
+                    />
+                  </View>
+
+                  <View style={styles.flex} />
+                </Row>
+
+                <Text size={14} mb={8} mt={16} color={colors.grey100}>
+                  {t("tasks.list")}
+                </Text>
+                <Row align="center" fullWidth flexWrap="wrap">
+                  {filtersConfig.map(({ label, color, ...cat }) => {
+                    const isActive = values.list === label;
+
+                    return (
+                      <AppButton
+                        label={label}
+                        onPress={() => {
+                          setFieldValue("list", label);
+                        }}
+                        variant={EButtonVariants.SECONDARY}
+                        br={8}
+                        style={{
+                          height: 42,
+                          backgroundColor: `${color}15`,
+                          borderColor: isActive ? color : `${color}15`,
+                          marginRight: 8,
+                          marginBottom: 8,
+                        }}
+                        textColor={isActive ? color : colors.borderGreyDark}
+                        iconLeft={() => <cat.icon size={16} color={color} />}
+                      />
+                    );
+                  })}
+                </Row>
+              </Margin>
 
               <AppButton
                 onPress={() => {
@@ -144,6 +204,30 @@ export default function NewTaskScreen() {
                 disabled={!canSave}
                 loading={loading}
               />
+              <PickerModal
+                canProceed={!!values.dueDate}
+                showPicker={showPicker}
+                closeModal={closeModal}
+                renderContent={() =>
+                  pickerMode === "date" ? (
+                    <Calendar
+                      close={closeModal}
+                      currentDate={values.dueDate}
+                      onSelection={(date) => {
+                        setFieldValue("dueDate", formatDate(date?.dateString));
+                      }}
+                    />
+                  ) : (
+                    <Calendar
+                      close={closeModal}
+                      currentDate={values.dueDate}
+                      onSelection={(date) => {
+                        setFieldValue("dueDate", date?.dateString);
+                      }}
+                    />
+                  )
+                }
+              />
             </View>
           );
         }}
@@ -154,12 +238,21 @@ export default function NewTaskScreen() {
 
 const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: colors.white },
+  modalWrapper: {
+    width: "100%",
+    backgroundColor: colors.white,
+    borderRadius: 8,
+    overflow: "hidden",
+    padding: 16,
+  },
+  flex: { flex: 1, marginRight: 7 },
   screen: {
     flex: 1,
     backgroundColor: colors.white,
     paddingHorizontal: 24,
     paddingTop: Platform.select({ ios: 8, android: 14 }),
   },
+  closeModal: { width: 30, height: 30 },
   headerRow: {
     alignItems: "center",
     justifyContent: "space-between",

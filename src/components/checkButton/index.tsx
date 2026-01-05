@@ -3,22 +3,24 @@ import { StyleSheet, TouchableOpacity, ViewStyle } from "react-native";
 import LottieView from "lottie-react-native";
 import { CheckLottie } from "@assets";
 import { colors } from "@theme";
+import { CheckIcon } from "lucide-react-native";
 
 interface Props {
   active?: boolean;
   onPress?: () => void;
   style?: ViewStyle;
 }
+
 export function CheckButton({ active, onPress, style }: Props) {
   const animation = useRef<LottieView>(null);
 
-  useEffect(() => {
-    if (active) {
-      animation.current?.play(0, 45);
-    } else {
-      animation.current?.play(45, 0);
-    }
-  }, [active]);
+  // useEffect(() => {
+  //   if (active) {
+  //     animation.current?.play(0, 45);
+  //   } else {
+  //     animation.current?.play(45, 0);
+  //   }
+  // }, [active]);
 
   const like = () => {
     animation.current?.play(0, 45);
@@ -38,29 +40,26 @@ export function CheckButton({ active, onPress, style }: Props) {
         }
         onPress?.();
       }}
-      style={[styles.animationContainer, style]}
+      style={[styles.container, !active && styles.inactive, style]}
     >
-      <LottieView
-        ref={animation}
-        style={styles.animation}
-        source={CheckLottie}
-        autoPlay={false}
-        loop={false}
-        speed={1.5}
-      />
+      <CheckIcon size={18} color={active ? colors.white : colors.transparent} />
     </TouchableOpacity>
   );
 }
 
 const styles = StyleSheet.create({
-  animationContainer: {
+  container: {
     alignItems: "center",
     justifyContent: "center",
+    backgroundColor: colors.success,
     borderRadius: 15,
     width: 30,
     height: 30,
     borderWidth: 1,
-    borderColor: colors.textGrey + "30",
+    borderColor: colors.borderGreyDark + "30",
+  },
+  inactive: {
+    backgroundColor: colors.lightGrey,
   },
   animation: {
     width: 40,

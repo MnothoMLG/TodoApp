@@ -72,9 +72,11 @@ export const TaskCard: FC<Props> = ({
 
       {expanded && (
         <Margin ml={42}>
-          <Text color={colors.textGrey} size={14} mt={4}>
-            {task?.description || t("tasks.noDescription")}
-          </Text>
+          {task?.description && (
+            <Text color={colors.textGrey} size={14} mt={4}>
+              {task?.description}
+            </Text>
+          )}
 
           <Row fullWidth align="center" justify="flex-end">
             <TouchableOpacity onPress={onEdit} style={styles.actionIcon}>
