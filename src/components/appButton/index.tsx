@@ -1,15 +1,15 @@
-import React, { FC } from 'react';
-import { Text } from '../text';
+import React, { FC } from "react";
+import { Text } from "../text";
 import {
   ActivityIndicator,
   StyleSheet,
   TouchableOpacity,
   TouchableOpacityProps,
-} from 'react-native';
-import { colors } from '@theme';
-import { SvgProps } from 'react-native-svg';
-import { EButtonVariants } from '@constants/types';
-import * as Animatable from 'react-native-animatable';
+} from "react-native";
+import { colors } from "@theme";
+import { SvgProps } from "react-native-svg";
+import { EButtonVariants } from "@constants/types";
+import * as Animatable from "react-native-animatable";
 
 export interface AppButtonProps extends TouchableOpacityProps {
   label?: string;
@@ -36,7 +36,7 @@ export const AppButton: FC<AppButtonProps> = ({
   br,
   bold,
   rounded,
-  variant = 'primary',
+  variant = "primary",
   disabled,
   ...props
 }) => {
@@ -51,15 +51,15 @@ export const AppButton: FC<AppButtonProps> = ({
         style,
         { borderRadius: br || 0 },
         disabled ? bodyStyle.disabled : null,
-        props.iconRight && { justifyContent: 'space-between' },
+        props.iconRight && { justifyContent: "space-between" },
       ]}
       {...props}
       disabled={disabled || loading}
     >
       {loading ? (
         <ActivityIndicator
-          color={variant === 'primary' ? colors.white : colors.primary}
-          size='small'
+          color={variant === "primary" ? colors.white : colors.primary}
+          size="small"
         />
       ) : label ? (
         <>
@@ -67,7 +67,7 @@ export const AppButton: FC<AppButtonProps> = ({
             <IconLeft
               color={
                 textColor ||
-                (variant === 'primary' ? colors.white : colors.primary)
+                (variant === "primary" ? colors.white : colors.primary)
               }
               width={19}
               height={19}
@@ -77,8 +77,8 @@ export const AppButton: FC<AppButtonProps> = ({
           <Text
             ml={props.iconLeft ? 8 : 0}
             mr={props.iconRight ? 8 : 0}
-            color={textStyle[variant]}
-            size={textSize || 16}
+            color={textColor || textStyle[variant]}
+            size={textSize || 14}
             bold={bold}
           >
             {label}
@@ -88,7 +88,7 @@ export const AppButton: FC<AppButtonProps> = ({
             <IconRight
               color={
                 textColor ||
-                (variant === 'primary' ? colors.white : colors.primary)
+                (variant === "primary" ? colors.white : colors.primary)
               }
               width={textSize || 19}
               height={19}
@@ -111,15 +111,15 @@ const textStyle = {
 const bodyStyle = StyleSheet.create({
   base: {
     height: 50,
-    justifyContent: 'center',
-    alignItems: 'center',
-    flexDirection: 'row',
+    justifyContent: "center",
+    alignItems: "center",
+    flexDirection: "row",
   },
   primary: {
     backgroundColor: colors.primary,
   },
   tertiary: {
-    borderStyle: 'dashed',
+    borderStyle: "dashed",
 
     borderColor: colors.primary,
     borderWidth: 1,
@@ -133,7 +133,7 @@ const bodyStyle = StyleSheet.create({
     paddingHorizontal: 12,
   },
   fullWidth: {
-    width: '100%',
+    width: "100%",
   },
   disabled: {
     opacity: 0.5,

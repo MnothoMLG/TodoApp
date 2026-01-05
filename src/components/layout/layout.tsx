@@ -1,19 +1,26 @@
-import { SafeAreaView, View, ViewProps, ViewStyle } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import React, { FC, ReactNode } from 'react';
+import {
+  FlexAlignType,
+  SafeAreaView,
+  View,
+  ViewProps,
+  ViewStyle,
+} from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import React, { FC, ReactNode } from "react";
+
+type flexJustify =
+  | "flex-start"
+  | "flex-end"
+  | "center"
+  | "space-between"
+  | "space-around"
+  | "space-evenly";
 
 export const Center: FC<ViewProps> = ({ children, style }) => (
-  <View style={[{ justifyContent: 'center', alignItems: 'center' }, style]}>
+  <View style={[{ justifyContent: "center", alignItems: "center" }, style]}>
     {children}
   </View>
 );
-
-type flexAlign =
-  | 'flex-start'
-  | 'center'
-  | 'flex-end'
-  | 'space-between'
-  | 'space-around';
 
 export function Margin({
   mb,
@@ -49,9 +56,9 @@ interface RowProps extends ViewProps {
   mb?: number;
   bg?: string;
   fullWidth?: boolean;
-  justify?: flexAlign;
-  align?: flexAlign;
-  flexWrap?: 'nowrap' | 'wrap' | 'wrap-reverse';
+  justify?: flexJustify;
+  align?: FlexAlignType;
+  flexWrap?: "nowrap" | "wrap" | "wrap-reverse";
 }
 
 export const Row: FC<RowProps> = ({
@@ -60,19 +67,21 @@ export const Row: FC<RowProps> = ({
   mb,
   align,
   justify,
+  flexWrap,
   bg,
   children,
 }) => {
   return (
     <View
       style={{
-        width: fullWidth ? '100%' : 'auto',
-        flexDirection: 'row',
+        width: fullWidth ? "100%" : "auto",
+        flexDirection: "row",
         marginTop: mt,
         marginBottom: mb,
-        backgroundColor: bg || 'transparent',
+        backgroundColor: bg || "transparent",
         justifyContent: justify,
         alignItems: align,
+        flexWrap: flexWrap,
       }}
     >
       {children}
@@ -91,8 +100,8 @@ export const Column: FC<RowProps> = ({
   return (
     <View
       style={{
-        width: fullWidth ? '100%' : 'auto',
-        flexDirection: 'column',
+        width: fullWidth ? "100%" : "auto",
+        flexDirection: "column",
         marginTop: mt,
         marginBottom: mb,
         backgroundColor: bg,
@@ -141,8 +150,8 @@ export const Footer: FC<ViewProps> = ({ children }) => {
   return (
     <SafeAreaView
       style={{
-        position: 'absolute',
-        width: '100%',
+        position: "absolute",
+        width: "100%",
         bottom: insets.bottom,
         padding: 20,
       }}

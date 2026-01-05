@@ -6,7 +6,11 @@ Decisions & Assumptions:
 
 2. Added a one second delay upon adding tasks to lengthen the async execution
 
+3. User is unable to edit tasks as this is an MVP/POC type of project.
+
 Notable improvements are around memoizing and optimizing list renders.
+
+1. Allowing creation of custom lists/tags
 
 To run project:
 

@@ -6,6 +6,7 @@ import { ITask } from "@constants/types";
 export type MainStackParamList = {
   [routes.HOME]: undefined;
   [routes.COMPLETE]: undefined;
+  [routes.CALENDAR]: undefined;
   [routes.CREATE_TASK]:
     | {
         task: ITask;

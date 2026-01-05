@@ -11,29 +11,37 @@ import { EmptyListIcon } from "@assets/icons";
 type Props = {
   onCreateNewTask: () => void;
   refreshing?: boolean;
+  search?: boolean;
 };
-export const ListEmptyComponent = ({ onCreateNewTask, refreshing }: Props) => {
+export const ListEmptyComponent = ({
+  onCreateNewTask,
+  refreshing,
+  search,
+}: Props) => {
   const { t } = useTranslation();
   return (
-    <Center style={{ flex: 1, paddingVertical: 102 }}>
+    <Center style={styles.container}>
       <EmptyListIcon size={30} color={colors.dark} />
       <Text mt={16} mb={22} color={colors.textGrey} size={14}>
         {t("common.noResults")}
       </Text>
-      <AppButton
-        variant={EButtonVariants.SECONDARY}
-        iconLeft={() => <PlusIcon size={16} color={colors.primary} />}
-        label={` ${t("tasks.start")} `}
-        br={12}
-        style={styles.rfrsh}
-        textSize={12}
-        onPress={onCreateNewTask}
-        loading={refreshing}
-      />
+      {!search && (
+        <AppButton
+          variant={EButtonVariants.SECONDARY}
+          iconLeft={() => <PlusIcon size={16} color={colors.primary} />}
+          label={` ${t("tasks.start")} `}
+          br={12}
+          style={styles.rfrsh}
+          textSize={12}
+          onPress={onCreateNewTask}
+          loading={refreshing}
+        />
+      )}
     </Center>
   );
 };
 
 const styles = StyleSheet.create({
+  container: { flex: 1, paddingVertical: 102 },
   rfrsh: { width: 172 },
 });

@@ -1,9 +1,11 @@
 import React from "react";
+import { createStackNavigator } from "@react-navigation/stack";
 import {
-  createStackNavigator,
-  StackHeaderProps,
-} from "@react-navigation/stack";
-import { CreateTaskScreen, CompletedTasksScreen, HomeScreen } from "@screens";
+  CreateTaskScreen,
+  CompletedTasksScreen,
+  CalendarScreen,
+  HomeScreen,
+} from "@screens";
 import { MainStackParamList } from "./types";
 import { noHeader } from "@config";
 import { routes } from "./routes";
@@ -37,6 +39,12 @@ const HomeTabNav = () => {
   return (
     <Tab.Navigator tabBar={(props: any) => <CustomTabBar {...props} />}>
       <Tab.Screen {...noHeader} name={routes.HOME} component={HomeScreen} />
+
+      <Tab.Screen
+        {...noHeader}
+        name={routes.CALENDAR}
+        component={CalendarScreen}
+      />
       <Tab.Screen
         {...noHeader}
         name={routes.COMPLETE}

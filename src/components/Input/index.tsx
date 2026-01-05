@@ -57,6 +57,7 @@ export const Input = ({
   const erronus = error && touched;
   const searchRef: any = useRef(null);
   const isFocused = useIsFocused();
+
   useEffect(() => {
     if (isFocused && props?.autoFocus) {
       searchRef?.current?.focus();
@@ -139,7 +140,8 @@ export const Input = ({
       </View>
       {erronus && (
         <Text
-          mt={8}
+          mb={8}
+          mt={-4} //what's the issue ?
           size={13}
           align="left"
           style={styles.leftAlign}

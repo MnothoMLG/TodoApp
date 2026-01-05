@@ -10,4 +10,5 @@ export { CheckButton } from "./checkButton";
 export { FallbackComponent } from "./fallBack";
 export { CreateTaskButton } from "./createTaskButton";
 export { ListEmptyComponent } from "./emptyList";
+export { Calendar } from "./calendar";
 export * from "./layout/layout";
