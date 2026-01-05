@@ -1,5 +1,5 @@
 import { createAction } from "@reduxjs/toolkit";
-import { ITaskPayload, TasksState } from "./types";
+import { IDeleteTaskPayload, ITaskPayload, TasksState } from "./types";
 import { ICallBacks, ITask } from "@constants/types";
 
 // ===== GET LIST OF TASKS
@@ -33,3 +33,17 @@ export const TOGGLE_TASK_COMPLETION_KEY = "@DATA/TOGGLE_TASK_COMPLETION";
 export const toggleTaskCompletion = createAction<{
   task: ITask;
 }>("@DATA/TOGGLE_TASK_COMPLETION_ACTION");
+
+// ===== DELETE TASK
+
+export const DELETE_TASK_LOADING_KEY = "@DATA/DELETE_TASK";
+
+export const deleteTaskRequest = createAction<IDeleteTaskPayload>(
+  "@DATA/DELETE_TASK_API_REQUEST"
+);
+export const deleteTaskSuccess = createAction<{ taskId: string }>(
+  "@DATA/DELETE_TASK_API_SUCCESS"
+);
+export const deleteTaskError = createAction<{
+  error: unknown;
+}>("@DATA/DELETE_TASK_API_ERROR");

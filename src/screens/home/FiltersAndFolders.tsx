@@ -1,17 +1,11 @@
 import React from "react";
-import {
-  View,
-  FlatList,
-  StyleSheet,
-  SafeAreaView,
-  TouchableOpacity,
-} from "react-native";
+import { View, StyleSheet, TouchableOpacity } from "react-native";
 import { Text } from "@components";
 import { colors } from "@theme";
 import groupBy from "lodash/groupBy";
 import { filtersConfig } from "@config/index";
 import { useSelector } from "react-redux";
-import { getAllCharacters } from "@store/tasks/selectors";
+import { getAllTasks } from "@store/tasks/selectors";
 import { EListingCategory } from "@constants/types";
 
 type Props = {
@@ -20,10 +14,8 @@ type Props = {
 };
 
 export function FiltersAndFolders({ onFilterSelection, activeFilter }: Props) {
-  const tasksList = useSelector(getAllCharacters);
-
+  const tasksList = useSelector(getAllTasks);
   const groupedTasks = groupBy(tasksList, "list");
-  console.log("grouped tasks", { groupedTasks });
 
   return (
     <View style={styles.summaryGrid}>

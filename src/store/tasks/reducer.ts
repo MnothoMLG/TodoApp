@@ -3,6 +3,7 @@ import {
   addTaskSuccess,
   fetchTasksError,
   fetchTasksSuccess,
+  deleteTaskSuccess,
   toggleTaskCompletion,
 } from "./actions";
 import { TasksState } from "./types";
@@ -35,33 +36,55 @@ export const tasksReducer = createReducer(INITIAL_STATE, (builder) => {
         tasksList: [action.payload, ...state.tasksList],
       };
     })
+    .addCase(deleteTaskSuccess, (state: TasksState, action) => {
+      const { taskId } = action.payload;
+      const tasksList = state.tasksList ?? [];
+      const completedTasks = state.completedTasks ?? [];
+      return {
+        ...state,
+        tasksList: tasksList.filter((task) => task.id !== taskId),
+        completedTasks: completedTasks.filter((task) => task.id !== taskId),
+      };
+    })
     .addCase(toggleTaskCompletion, (state: TasksState, action) => {
       const { task } = action.payload;
-      const isAlreadyCompleted = state.completedTasks.some(
+      const tasksList = state.tasksList ?? [];
+      const completedTasks = state.completedTasks ?? [];
+      const isAlreadyCompleted = completedTasks.some(
         (t) => t.id === task.id
       );
 
       let updatedCompletedTasks: Array<ITask>;
       if (isAlreadyCompleted) {
         // Remove from completed tasks
-        updatedCompletedTasks = state.completedTasks.filter(
-          (t) => t.id !== task.id
-        );
+        updatedCompletedTasks = completedTasks.filter((t) => t.id !== task.id);
         showToast({
           type: EToastTypes.SUCCESS,
           message: `Marked "${task.title}" as incomplete.`,
         });
       } else {
         // Add to completed tasks
-        updatedCompletedTasks = [...state.completedTasks, task];
+
+        console.log("completed tasks:", {
+          updatedCompletedTasks: completedTasks,
+        });
+        updatedCompletedTasks = [
+          ...completedTasks,
+          { ...task, completed: true },
+        ];
         showToast({
           type: EToastTypes.SUCCESS,
           message: `Marked "${task.title}" as complete!`,
         });
       }
 
+      const updatedTasksList = tasksList.map((t) =>
+        t.id === task.id ? { ...t, completed: !isAlreadyCompleted } : t
+      );
+
       return {
         ...state,
+        tasksList: updatedTasksList,
         completedTasks: updatedCompletedTasks,
       };
     });

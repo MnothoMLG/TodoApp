@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { Alert, SafeAreaView, StyleSheet, FlatList } from "react-native";
+import { Alert, StyleSheet, FlatList } from "react-native";
 import {
   Margin,
   Text,
@@ -18,26 +18,29 @@ import CalendarStrip from "react-native-calendar-strip";
 import {
   fetchTasksRequest,
   GET_TASKS_LOADING_KEY,
+  deleteTaskRequest,
   toggleTaskCompletion,
 } from "@store/actions";
-import { getAllCharacters } from "@store/tasks/selectors";
+import { getAllTasks } from "@store/tasks/selectors";
 import { colors } from "@theme";
 import { SearchIcon } from "lucide-react-native";
-import { EListingCategory } from "@constants/types";
+import moment, { Moment } from "moment";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const CalendarScreen = () => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
-  const [activeDateFilter, setActiveFilter] = useState<string>();
+  const [activeDateFilter, setActiveFilter] = useState<Moment>(moment());
   const [searchKeyword, setSearchKeyword] = useState("");
   const navigation = useNavigation<GenericMainStackScreenProps<routes.HOME>>();
   const loading = useLoading(GET_TASKS_LOADING_KEY);
-  const tasksList = useSelector(getAllCharacters);
+  const tasksList = useSelector(getAllTasks);
 
   const tasksToDisplay = useMemo(() => {
     let filteredTasks = tasksList.filter((task) => {
       const matchesDate =
-        !activeDateFilter || task.dueDate === activeDateFilter;
+        !activeDateFilter ||
+        task.dueDate === activeDateFilter.format("DD-MM-YYYY");
 
       const matchesSearch =
         !searchKeyword ||
@@ -50,17 +53,11 @@ const CalendarScreen = () => {
     return filteredTasks;
   }, [activeDateFilter, searchKeyword, tasksList]);
 
-  const taskListLength = tasksToDisplay.length;
-
-  console.log("to diplay ", { tasksToDisplay });
+  const taskListLength = tasksToDisplay?.length;
 
   useEffect(() => {
     dispatch(fetchTasksRequest());
   }, []);
-
-  useEffect(() => {
-    console.log("+++ ==== Task List Updated === +++", tasksList);
-  }, [tasksList]);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -85,26 +82,18 @@ const CalendarScreen = () => {
               scrollable
               style={{ height: 80, paddingTop: 20, paddingBottom: 10 }}
               calendarColor={colors.transparent}
-              calendarHeaderStyle={{
-                color: colors.textGrey,
-                fontSize: 14,
-                marginBottom: 8,
-              }}
+              calendarHeaderStyle={styles.calendarHeaderStyle}
+              selectedDate={activeDateFilter}
               onDateSelected={(date: moment.Moment) => {
-                console.log("++++++ >>", { date });
-                const formattedDate = date.format("DD-MM-YYYY");
-                console.log("++++++ >>", { formattedDate });
-                setActiveFilter(formattedDate as EListingCategory);
-
-                // tasksToDisplay
+                setActiveFilter(date);
               }}
-              dateNumberStyle={{ color: colors.grey100 }}
-              dateNameStyle={{ color: colors.grey100 }}
+              dateNumberStyle={styles.baseDateStyles}
+              dateNameStyle={styles.baseDateStyles}
               highlightDateNumberStyle={styles.dateStyles}
               highlightDateNameStyle={styles.dateStyles}
-              disabledDateNameStyle={{ color: "grey" }}
-              disabledDateNumberStyle={{ color: "grey" }}
-              iconContainer={{ flex: 0.1 }}
+              disabledDateNameStyle={styles.disabledDateStyle}
+              disabledDateNumberStyle={styles.disabledDateStyle}
+              iconContainer={styles.icon}
             />
 
             <Input
@@ -114,6 +103,15 @@ const CalendarScreen = () => {
               placeholder={t("tasks.search")}
               onChangeText={(text) => setSearchKeyword(text)}
             />
+
+            {!!activeDateFilter && (
+              <Text mt={16} bold size={14} color={colors.textGrey}>
+                {t("tasks.dueOn").replace(
+                  "{0}",
+                  activeDateFilter.format("DD MMM YY")
+                )}
+              </Text>
+            )}
           </Margin>
         }
         renderItem={({ item, index }) =>
@@ -125,30 +123,6 @@ const CalendarScreen = () => {
               task={item}
               toggleComplete={() => {
                 dispatch(toggleTaskCompletion({ task: item }));
-              }}
-              onEdit={() => {
-                navigation.navigate(routes.CREATE_TASK, {
-                  task: item,
-                });
-              }}
-              onDelete={() => {
-                Alert.alert(
-                  t("tasks.deleteTaskTitle"),
-                  t("tasks.deleteTaskMessage"),
-                  [
-                    {
-                      text: t("common.cancel"),
-                      style: "cancel",
-                    },
-                    {
-                      text: t("common.delete"),
-                      style: "destructive",
-                      onPress: () => {
-                        /* Dispatch delete action here */
-                      },
-                    },
-                  ]
-                );
               }}
             />
           )
@@ -182,8 +156,15 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.white,
-    padding: 24,
   },
+  calendarHeaderStyle: {
+    color: colors.textGrey,
+    fontSize: 14,
+    marginBottom: 8,
+  },
+  icon: { flex: 0.1 },
+  disabledDateStyle: { color: colors.grey },
+  baseDateStyles: { color: colors.grey100 },
   dateStyles: { color: colors.primary },
   items: {
     paddingBottom: 106,

@@ -22,7 +22,7 @@ export const isComplete = (
   taskToCheck: ITask,
   completed: Array<ITask>
 ) => {
-  return completed.some(
+  return completed?.some(
     (task) =>
       task.title === taskToCheck.title && task.dueDate === taskToCheck.dueDate
   );
@@ -52,7 +52,7 @@ export function formatDate(date: string): string {
 export function isToday(date?: string) {
   if (!date) return false;
   const today = new Date().toISOString().slice(0, 10); // yyyy-mm-dd
-  return date === today;
+  return date === formatDate(today);
 }
 
 export function generateTaskId(): string {
@@ -62,6 +62,13 @@ export function generateTaskId(): string {
 export function buildSections(tasks: ITask[]) {
   const todayTasks = tasks.filter((t) => isToday(t.dueDate));
   const otherTasks = tasks.filter((t) => !isToday(t.dueDate));
+
+  console.log(
+    "+++ ==== Building Sections === +++",
+    tasks.map((t) => {
+      console.log({ task: t }, isToday(t.dueDate));
+    })
+  );
 
   return [
     { title: "Today", data: todayTasks },

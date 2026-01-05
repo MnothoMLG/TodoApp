@@ -8,16 +8,15 @@ Decisions & Assumptions:
 
 3. User is unable to edit tasks as this is an MVP/POC type of project.
 
-Notable improvements are around memoizing and optimizing list renders.
+Notable improvement suggestions:
 
 1. Allowing creation of custom lists/tags
 
 To run project:
 
 1. yarn / npm i / npx expo install
-
 2. Yarn start, the Metro Bundler will start
 3. Make sure you're on expo go (press s to switch)
-4. You can either scan the QR code and run on a physical device (Will require installing Expo Go) or select a platform from one of the options provided
+4. You can either scan the QR code and run on a physical device (Will require installing Expo Go) or select a platform from one of the options provided and make sure you have an emulator/simulator running in order to run app.
 
 NB: This is an Expo Go build, but can be turned into a development build that'll allow use and installation of RN 3rd party libraries and use of eas for app distribution either internally or to stores.

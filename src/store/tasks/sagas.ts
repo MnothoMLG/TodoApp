@@ -4,13 +4,16 @@ import {
   addTaskError,
   addTaskRequest,
   addTaskSuccess,
+  deleteTaskError,
+  deleteTaskRequest,
+  deleteTaskSuccess,
   fetchTasksError,
   fetchTasksRequest,
   fetchTasksSuccess,
 } from "./actions";
 import { EToastTypes, ITask } from "@constants/types";
 import { loadTasksFromStorage, saveTasksToStorage, showToast } from "@util";
-import { ITaskPayload } from "./types";
+import { IDeleteTaskPayload, ITaskPayload } from "./types";
 
 const selectTasks = (state: any): ITask[] => state.tasksReducer.tasksList;
 
@@ -63,7 +66,43 @@ export function* addTaskSaga(action: { type: string; payload: ITaskPayload }) {
   }
 }
 
+export function* deleteTaskSaga(action: {
+  type: string;
+  payload: IDeleteTaskPayload;
+}) {
+  try {
+    yield delay(300); // Simulate network delay
+    const { taskId, taskTitle, onSuccess, onFailure } = action.payload;
+    const current: ITask[] = yield call(loadTasksFromStorage);
+
+    const next = current.filter((task) => task.id !== taskId);
+
+    if (next.length === current.length) {
+      const reason = "Task not found";
+      onFailure?.(reason);
+      return;
+    }
+
+    yield call(saveTasksToStorage, next);
+    yield put(deleteTaskSuccess({ taskId }));
+    yield showToast({
+      type: EToastTypes.SUCCESS,
+      message: `"${taskTitle ?? "Task"}" deleted successfully`,
+    });
+    onSuccess?.();
+  } catch (error) {
+    console.log("Error deleting task:", error);
+    yield put(deleteTaskError({ error }));
+    showToast({
+      type: EToastTypes.ERROR,
+      message: "Failed to delete task. Please try again.",
+    });
+    action.payload.onFailure?.("Failed to delete task");
+  }
+}
+
 export function* watchTasksSagas() {
   yield takeLatest(fetchTasksRequest.type, fetchTasksSaga);
   yield takeLatest(addTaskRequest.type, addTaskSaga);
+  yield takeLatest(deleteTaskRequest.type, deleteTaskSaga);
 }
