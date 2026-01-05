@@ -19,11 +19,8 @@ const selectTasks = (state: any): ITask[] => state.tasksReducer.tasksList;
 
 export function* fetchTasksSaga() {
   try {
-    console.log("Fetching all your tasks +++");
     const tasksList: ITask[] = yield call(loadTasksFromStorage);
     yield delay(1000); // Simulate network delay
-
-    console.log("Tasks fetched successfully", tasksList);
 
     yield put(
       fetchTasksSuccess({
@@ -44,11 +41,7 @@ export function* addTaskSaga(action: { type: string; payload: ITaskPayload }) {
   try {
     yield delay(500); // Simulate network delay
     const { task, onSuccess } = action.payload;
-
-    console.log("Adding new task +++", task);
     const current: ITask[] = yield select(selectTasks);
-
-    console.log("Current tasks list:", current);
 
     // prevent duplicates by id (optional safety)
     const next = [task, ...current.filter((t) => t.id !== task.id)];

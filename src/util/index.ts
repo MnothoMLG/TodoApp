@@ -63,13 +63,6 @@ export function buildSections(tasks: ITask[]) {
   const todayTasks = tasks.filter((t) => isToday(t.dueDate));
   const otherTasks = tasks.filter((t) => !isToday(t.dueDate));
 
-  console.log(
-    "+++ ==== Building Sections === +++",
-    tasks.map((t) => {
-      console.log({ task: t }, isToday(t.dueDate));
-    })
-  );
-
   return [
     { title: "Today", data: todayTasks },
     { title: "Upcoming", data: otherTasks },

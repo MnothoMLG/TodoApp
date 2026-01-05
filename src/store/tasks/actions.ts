@@ -1,6 +1,6 @@
 import { createAction } from "@reduxjs/toolkit";
 import { IDeleteTaskPayload, ITaskPayload, TasksState } from "./types";
-import { ICallBacks, ITask } from "@constants/types";
+import { ITask } from "@constants/types";
 
 // ===== GET LIST OF TASKS
 
