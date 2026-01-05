@@ -16,7 +16,7 @@ export function CheckButton({ active, onPress, style }: Props) {
       }}
       style={[styles.container, !active && styles.inactive, style]}
     >
-      <CheckIcon size={18} color={active ? colors.white : colors.transparent} />
+      <CheckIcon size={14} color={active ? colors.white : colors.transparent} />
     </TouchableOpacity>
   );
 }
@@ -26,9 +26,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: colors.success,
-    borderRadius: 15,
-    width: 30,
-    height: 30,
+    borderRadius: 10,
+    width: 20,
+    height: 20,
     borderWidth: 1,
     borderColor: colors.borderGreyDark + "30",
   },
