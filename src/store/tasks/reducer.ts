@@ -50,9 +50,7 @@ export const tasksReducer = createReducer(INITIAL_STATE, (builder) => {
       const { task } = action.payload;
       const tasksList = state.tasksList ?? [];
       const completedTasks = state.completedTasks ?? [];
-      const isAlreadyCompleted = completedTasks.some(
-        (t) => t.id === task.id
-      );
+      const isAlreadyCompleted = completedTasks.some((t) => t.id === task.id);
 
       let updatedCompletedTasks: Array<ITask>;
       if (isAlreadyCompleted) {
@@ -65,9 +63,6 @@ export const tasksReducer = createReducer(INITIAL_STATE, (builder) => {
       } else {
         // Add to completed tasks
 
-        console.log("completed tasks:", {
-          updatedCompletedTasks: completedTasks,
-        });
         updatedCompletedTasks = [
           ...completedTasks,
           { ...task, completed: true },
