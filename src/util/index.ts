@@ -22,7 +22,7 @@ export const isComplete = (
   taskToCheck: ITask,
   completed: Array<ITask>
 ) => {
-  return completed.some(
+  return completed?.some(
     (task) =>
       task.title === taskToCheck.title && task.dueDate === taskToCheck.dueDate
   );

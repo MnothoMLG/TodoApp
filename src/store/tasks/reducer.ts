@@ -72,8 +72,13 @@ export const tasksReducer = createReducer(INITIAL_STATE, (builder) => {
         });
       }
 
+      const updatedTasksList = state.tasksList.map((t) =>
+        t.id === task.id ? { ...t, completed: !isAlreadyCompleted } : t
+      );
+
       return {
         ...state,
+        tasksList: updatedTasksList,
         completedTasks: updatedCompletedTasks,
       };
     });

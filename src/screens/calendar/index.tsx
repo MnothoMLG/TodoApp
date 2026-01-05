@@ -53,7 +53,7 @@ const CalendarScreen = () => {
     return filteredTasks;
   }, [activeDateFilter, searchKeyword, tasksList]);
 
-  const taskListLength = tasksToDisplay.length;
+  const taskListLength = tasksToDisplay?.length;
 
   useEffect(() => {
     dispatch(fetchTasksRequest());

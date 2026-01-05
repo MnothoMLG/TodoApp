@@ -10,25 +10,13 @@ const config = {
   storage: AsyncStorage,
   whitelist: ["tasksReducer"],
   debug: true,
-  transforms: [
-    {
-      in: (state: any, key: string) => {
-        if (key === "tasksReducer") {
-          // Only persist the 'favourites' field
-          return { favourites: state.favourites };
-        }
-        return state;
-      },
-      out: (state: any, key: string) => state,
-      config: {},
-    },
-  ],
 };
+const persistedReducers = persistReducer(config, reducers);
 
 const sagaMiddleware = createSagaMiddleware();
 
 const store = configureStore({
-  reducer: reducers,
+  reducer: persistedReducers,
   devTools: true,
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
