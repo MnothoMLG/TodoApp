@@ -21,7 +21,7 @@ import {
   deleteTaskRequest,
   toggleTaskCompletion,
 } from "@store/actions";
-import { getAllCharacters } from "@store/tasks/selectors";
+import { getAllTasks } from "@store/tasks/selectors";
 import { colors } from "@theme";
 import { SearchIcon } from "lucide-react-native";
 import moment, { Moment } from "moment";
@@ -34,7 +34,7 @@ const CalendarScreen = () => {
   const [searchKeyword, setSearchKeyword] = useState("");
   const navigation = useNavigation<GenericMainStackScreenProps<routes.HOME>>();
   const loading = useLoading(GET_TASKS_LOADING_KEY);
-  const tasksList = useSelector(getAllCharacters);
+  const tasksList = useSelector(getAllTasks);
 
   const tasksToDisplay = useMemo(() => {
     let filteredTasks = tasksList.filter((task) => {

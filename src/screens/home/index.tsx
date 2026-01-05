@@ -20,7 +20,7 @@ import {
   deleteTaskRequest,
   toggleTaskCompletion,
 } from "@store/actions";
-import { getAllCharacters } from "@store/tasks/selectors";
+import { getAllTasks } from "@store/tasks/selectors";
 import { colors } from "@theme";
 import { FiltersAndFolders } from "./FiltersAndFolders";
 import { SearchIcon } from "lucide-react-native";
@@ -35,7 +35,7 @@ const Home = () => {
   const [searchKeyword, setSearchKeyword] = useState("");
   const navigation = useNavigation<GenericMainStackScreenProps<routes.HOME>>();
   const loading = useLoading(GET_TASKS_LOADING_KEY);
-  const tasksList = useSelector(getAllCharacters);
+  const tasksList = useSelector(getAllTasks);
   const taskListLength = tasksList.length;
 
   const tasksToDisplay = useMemo(() => {
