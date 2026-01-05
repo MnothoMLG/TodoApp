@@ -1,4 +1,3 @@
-import { AxiosResponse } from "axios";
 import { takeLatest, put, call, delay, select } from "redux-saga/effects";
 import {
   addTaskError,

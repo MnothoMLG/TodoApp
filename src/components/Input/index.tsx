@@ -18,6 +18,7 @@ import { Row } from "@components/layout/layout";
 interface IProps extends TextInputProps {
   style?: Record<string, unknown> | Record<string, unknown>[];
   wrapperStyle?: StyleProp<ViewStyle>;
+  inputStyle?: StyleProp<ViewStyle>;
   error?: string;
   centerText?: boolean;
   label?: string;
@@ -45,6 +46,7 @@ export const Input = ({
   required,
   error,
   disabled,
+  inputStyle,
   onClear,
   ...props
 }: IProps) => {
@@ -100,6 +102,7 @@ export const Input = ({
             styles.input,
             centerText && styles.centerText,
             disabled && { color: colors.textGrey },
+            inputStyle,
           ]}
           ref={searchRef}
           placeholder={props.placeholder || ""}
