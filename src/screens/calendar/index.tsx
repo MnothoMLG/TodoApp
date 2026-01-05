@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { Alert, StyleSheet, FlatList } from "react-native";
+import { StyleSheet, FlatList } from "react-native";
 import {
   Margin,
   Text,
@@ -18,7 +18,6 @@ import CalendarStrip from "react-native-calendar-strip";
 import {
   fetchTasksRequest,
   GET_TASKS_LOADING_KEY,
-  deleteTaskRequest,
   toggleTaskCompletion,
 } from "@store/actions";
 import { getAllTasks } from "@store/tasks/selectors";

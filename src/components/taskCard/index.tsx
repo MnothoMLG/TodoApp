@@ -9,7 +9,7 @@ import { AnimatedButton } from "../appButton";
 import ShimmerPlaceholder from "react-native-shimmer-placeholder";
 import { LinearGradient } from "expo-linear-gradient";
 import { CheckButton } from "../checkButton";
-import { isComplete } from "@util";
+import { formatDMY, isComplete } from "@util";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllCompleteTasks } from "@store/tasks/selectors";
 import { Trash2Icon, ChevronDown, ChevronUp } from "lucide-react-native";
@@ -30,6 +30,7 @@ export const TaskCard: FC<Props> = ({ toggleComplete, task, index }) => {
   const listConfig = filtersConfig.find((f) => f.label === task.list);
   const dispatch = useDispatch();
 
+  const formattedDate = formatDMY(task.dueDate);
   const onDelete = () => {
     Alert.alert(t("tasks.deleteTaskTitle"), t("tasks.deleteTaskMessage"), [
       {
@@ -98,7 +99,7 @@ export const TaskCard: FC<Props> = ({ toggleComplete, task, index }) => {
       </Row>
 
       {expanded && (
-        <Margin ml={42}>
+        <Margin ml={32}>
           {task?.description && (
             <Text color={colors.textGrey} size={14} mt={4}>
               {task?.description}
@@ -106,6 +107,9 @@ export const TaskCard: FC<Props> = ({ toggleComplete, task, index }) => {
           )}
 
           <Row fullWidth align="center" justify="flex-end">
+            <Text size={11}>
+              {t("tasks.dueDate")}: {formattedDate}
+            </Text>
             <TouchableOpacity onPress={onDelete} style={styles.actionIcon}>
               <Trash2Icon color={colors.danger} size={16} />
             </TouchableOpacity>
@@ -167,8 +171,8 @@ const styles = StyleSheet.create({
     borderBottomLeftRadius: 8,
   },
   checkBox: {
-    height: 30,
-    maxWidth: 30,
+    height: 20,
+    maxWidth: 20,
     alignSelf: "flex-start",
   },
 });

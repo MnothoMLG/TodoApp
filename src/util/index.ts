@@ -68,3 +68,17 @@ export function buildSections(tasks: ITask[]) {
     { title: "Upcoming", data: otherTasks },
   ].filter((section) => section.data.length > 0);
 }
+
+export function formatDMY(input?: string) {
+  if (!input) return "";
+  // input: "dd-mm-yyyy"
+  const [day, month, year] = input.split("-").map(Number);
+
+  const date = new Date(year, month - 1, day);
+
+  return date.toLocaleDateString("en-GB", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+  });
+}

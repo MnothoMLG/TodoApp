@@ -125,9 +125,10 @@ export default function NewTaskScreen() {
                 value={values.description}
                 onChangeText={handleChange("description")}
                 placeholder={t("tasks.descriptionPlaceholder")}
-                style={styles.textArea}
+                inputStyle={styles.textArea}
                 multiline
                 textAlignVertical="top"
+                style={styles.wrapper}
               />
 
               <Margin mt={24} mb={24}>
@@ -147,7 +148,7 @@ export default function NewTaskScreen() {
                       }}
                       variant={EButtonVariants.SECONDARY}
                       br={8}
-                      style={{ height: 42 }}
+                      style={styles.dueDate}
                       textSize={13}
                       iconLeft={() => (
                         <CalendarIcon size={16} color={colors.textGrey} />
@@ -234,6 +235,8 @@ const styles = StyleSheet.create({
     overflow: "hidden",
     padding: 16,
   },
+  wrapper: { height: 102 },
+  dueDate: { height: 42 },
   flex: { flex: 1, marginRight: 7 },
   screen: {
     flex: 1,
@@ -269,15 +272,16 @@ const styles = StyleSheet.create({
     fontSize: 13,
     marginBottom: 8,
   },
-
   textArea: {
-    fontSize: 16,
-    height: 120,
+    minHeight: 92,
+    fontSize: 14,
+    lineHeight: 22,
+    color: "#111827",
+    paddingVertical: 10,
   },
 
   row: { flexDirection: "row", gap: 14 },
   half: { flex: 1 },
-
   field: {
     flexDirection: "row",
     alignItems: "center",
